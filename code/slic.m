@@ -71,10 +71,3 @@ for a = 1:length(srcFiles_img)
 end
 save('all_Q.mat','all_Q');
 
-
-
-
-
-
-
-
