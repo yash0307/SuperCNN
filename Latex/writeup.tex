@@ -151,10 +151,37 @@ q_{xj}^c = t(r_j).|C(r_x)-C(r_j)|.w(P(r_x),P(rj))
 \end{align*}
 where $t(r_j)$ counts the total number of pixels in region $r_j$. This term weights superpixels with more number of pixels to have higher contribution to the contrast than those with fewer pixels. $C(r_x)$ is the mean color vector of region $r_x$ and $|C(r_x)-C(r_j)|$ is the 3D vector storing absolute differences of each color channel. $P(r_x)$ is the mean position of $(r_x)$. The term $w(P(r_x),P(rj))$ is a Gaussian weight to attach higher contribution to pixels spatially closer to each other and $w(P(r_x),P(rj)) = exp(-\frac{1}{2\sigma_s^2}||P(r_x)-P(r_j)||^2$. Each row in Q is then sorted by the spatial distance to region $r_x$ to maintain local correlation such that the convolution operation in the CNN makes sense. Sorting groups neighbouring superpixels together. In summary, each row of the Q matrix describes the color differences between each region $r_X$ with all other M-1 superpixels in the image. The Gaussian distance weights include spatial information into the Q matrix which would have been lost otherwise. 
 
+The color uniqueness matrix does a good job in capturing salient objects separated by color variations in the image. Q matrix essentially represents regions that show significant color rarity in their neighbourhood. However, considering just color rarity to determine saliency might be an oversimplification. Consider images in \ref{fig3} and their ground-truth salient object segmentations. It is apparent that even though certain objects display color rarity in the image eg. flowers, colored balls in the background, fishes etc, they are not salient. We need to ignore superpixels that display higher local contrast separation but form part of the background. Primarily, we need to a metric to differentiate foreground objects from background objects. [Lie et al, 2011] show that foreground objects are compact i.e. locally connected, whereas background objects are distributed in the image. To capture this difference, we define a new matrix $Q'$ which is complementary to the original $Q$ matrix.
+
+\begin{figure}[h]
+	\includegraphics[width=1\linewidth]{scattered_background}
+	\caption{Example of scattered non-salient background}
+	\label{fig3}
+\end{figure}   
+
+\begin{align*}
+Q' = \begin{bmatrix}
+q_{11}^d&\dots&q_{1j}^d&\dots&q_{1M}^d\\
+\vdots&\ddots&&\ddots&\\
+q_{x1}^d&\dots&q_{xj}^d&\dots&q_{xM}^d\\
+\vdots&\ddots&&\ddots&\\
+q_{N1}^d&\dots&q_{Nj}^d&\dots&q_{NM}^d
+\end{bmatrix}
+\end{align*}
+where each element $q;_{xj}^d$ represents the weighted difference in the mean position vector (across channels) of superpixel region $x$ with every other superpixel region $j$. Each $q_{xj}^d$ can be defined as: 
+\begin{align*}
+q_{xj}^d = t(r_j).|P(r_x)-P(r_j)|.w(C(r_x),C(rj))
+\end{align*}
+where $t(r_j)$ counts the total number of pixels in region $r_j$. This term weights superpixels with more number of pixels to have higher contribution to the contrast than those with fewer pixels. $P(r_x)$ is the mean position vector of region $r_x$ and $|P(r_x)-P(r_j)|$ is the 3D vector storing absolute differences of each color channel. $C(r_x)$ is the mean color of $(r_x)$ across the 3 channels. The term $w(C(r_x),C(rj))$ is a Gaussian weight to attach higher contribution to pixels spatially closer to each other in the color space and $w(C(r_x),C(rj)) = exp(-\frac{1}{2\sigma_s^2}||C(r_x)-C(r_j)||^2$. Each row in Q' is then sorted by the spatial distance to region $r_x$ to maintain local correlation such that the convolution operation in the CNN makes sense. This is similar to what we did while forming the Q matrix.
+
+ 
+
+
+
 We look at saliency detection as a binary labeling problem where superpixels are classified as either salient or not. The relationship between the binary labellings and the Q matrix can be efficiently learned by a shallow Convolutional Neural Network. Salient objects display a perceptible difference in color compared to the surrounding and are locally connected. Our hypothesis is that the Q matrix accurately encompasses these properties of salient object from which a convolutional neural network can accurately learn internal representation to classify previously unseen images. 
 
 \section{Network Architecture}
-In this work, we use a shallow 3 stage Convolutional Neural Network with each stage having a 1D convolutional layer, a max-pooling operator, and a RELU activation. The first two stages include [] filters with kernel size 50 each. The architecure is summarized in \ref{fig3}.
+In this work, we use a shallow 3 stage Convolutional Neural Network with each stage having a 1D convolutional layer, a max-pooling operator, and a RELU activation. The first two stages include [] filters with kernel size 50 each. The architecure is summarized in \ref{fig4}.
 
 \section{Experiments}
   
