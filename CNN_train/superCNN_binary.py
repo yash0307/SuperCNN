@@ -24,32 +24,29 @@ def initialize_net(train_params):
 				filter_length=10, 
 				init='glorot_uniform', 
 				border_mode='same', 
-				input_shape=(train_params['max_size'], 3), 
+				input_shape=(None, 3), 
 				bias=True))
 	model.add(Activation('tanh'))
-	model.add(MaxPooling1D(pool_size=2))
 	model.add(Convolution1D(nb_filter=10,
 				filter_length=20, 
 				init='glorot_uniform', 
 				border_mode='same', 
 				bias=True))
 	model.add(Activation('tanh'))
-	model.add(MaxPooling1D(pool_size=2))
 	model.add(Convolution1D(nb_filter=20,
 				filter_length=20,
 				init='glorot_uniform',
 				border_mode='same',
 				bias=True))
-	model.add(Activation('tanh'))
-	model.add(MaxPooling1D(pool_size=2))
 	model.add(GlobalAveragePooling1D(input_shape=model.output_shape[1:]))
+	model.add(Activation('tanh'))
 	model.add(Dense(input_dim=20, 
 			output_dim=2,
 			init='glorot_uniform'))
-	model.add(Activation('tanh'))
+	model.add(Activation('relu'))
 	model.add(Dropout(0.3))
 	model.add(Dense(input_dim=2, 
-			output_dim=2, 
+			output_dim=1, 
 			init='glorot_uniform'))
 	model.add(Activation('softmax'))
 	return model
@@ -58,14 +55,14 @@ def initialize_params(train_data, data):
 
 	train_params = {'batch_size':256, 
 			'max_size':256, 
-			'base_lr':0.001, 
-			'decay_steps':5,
+			'base_lr':0.0001, 
+			'decay_steps':3,
 			'decay_factor':0.5, 
-			'num_epochs':15, 
+			'num_epochs':12, 
 			'neg_samples':len(data[0]), 
 			'pos_samples':len(data[1]), 
 			'total_samples':len(data[0])+len(data[1]), 
-			'checkpoint':1}
+			'checkpoint':5}
 
 	return train_params
 
@@ -91,21 +88,21 @@ def get_train_data(train_data, train_labels):
 def load_data(data, train_params):
 	data_frac = 0.5
 	X_temp = np.zeros((train_params['batch_size'], train_params['max_size'], 3))
-	Y_temp = np.zeros((train_params['batch_size'], 2))
+	Y_temp = np.zeros((train_params['batch_size'], 1))
 	idx = random.sample(range(0,train_params['pos_samples']), int(train_params['batch_size']*data_frac+2))
 	for i in range(0, int(train_params['batch_size']*data_frac)):
-		Y_temp[i][1] = float(1)
+		Y_temp[i] = float(1)
 		sam = data[1][idx[i]]
 		sam_len = sam.shape[0]
 		X_temp[i, :sam_len, :] = sam
 	idx = random.sample(range(0, train_params['neg_samples']), int(train_params['batch_size']-(train_params['batch_size']*data_frac)+2))
 	for i in range(int(train_params['batch_size']*data_frac), train_params['batch_size']):
-		Y_temp[i][0] = float(1)
+		Y_temp[i] = float(0)
 		sam = data[0][idx[i-int(train_params['batch_size']*data_frac)]]
 		sam_len = sam.shape[0]
 		X_temp[i, :sam_len, :] = sam
         X = np.zeros((train_params['batch_size'], train_params['max_size'], 3))
-        Y = np.zeros((train_params['batch_size'], 2))
+        Y = np.zeros((train_params['batch_size'], 1))
 	perm_idx = np.random.permutation(train_params['batch_size'])
 	for i in range(0, train_params['batch_size']):
 		X[i,:,:] = X_temp[perm_idx[i],:,:]
@@ -123,8 +120,8 @@ if __name__ == '__main__':
 	model = initialize_net(train_params)
 	model.summary()
 
-	model.compile(loss='categorical_crossentropy',
-		optimizer=optimizers.Adam(lr=train_params['base_lr']),
+	model.compile(loss='mean_squared_error',
+		optimizer=optimizers.SGD(lr=train_params['base_lr'], momentum=0.9),
 		metrics=['accuracy'])
 
 	train_datagen = ImageDataGenerator(
@@ -153,32 +150,28 @@ if __name__ == '__main__':
 		if epoch%1 == 0:
 			acu_pos = 0
 			acu_neg = 0
-			acu = 0
 			for i in range(0, int(train_params['pos_samples']/train_params['batch_size'])):
 				X = np.zeros((train_params['batch_size'], train_params['max_size'], 3))
-				Y = np.zeros((train_params['batch_size'], 2))
+				Y = np.zeros((train_params['batch_size'], 1))
 				for j in range(0, train_params['batch_size']):
 					sam = data[1][i*train_params['batch_size'] + j]
 					sam_len = sam.shape[0]
 					X[j, :sam_len, :] = sam
-					Y[j][1] = float(1)
+					Y[j] = float(1)
 				pred = model.evaluate(X,Y, batch_size=train_params['batch_size'])
 				print(pred)
 				acu_pos = acu_pos + pred[1]
-				acu = acu + pred[1]
 			for i in range(0, int(train_params['neg_samples']/train_params['batch_size'])):
 				X = np.zeros((train_params['batch_size'], train_params['max_size'], 3))
-				Y = np.zeros((train_params['batch_size'], 2))
+				Y = np.zeros((train_params['batch_size'], 1))
 				for j in range(0, train_params['batch_size']):
 					sam = data[0][i*train_params['batch_size'] + j]
 					sam_len = sam.shape[0]
 					X[j, :sam_len, :] = sam
-					Y[j][0] = float(1)
+					Y[j] = float(0)
 				pred = model.evaluate(X,Y, batch_size=train_params['batch_size'])
 				print(pred)
 				acu_neg = acu_neg + pred[1]
-				acu = acu + pred[1]
 			acu_pos = float(acu_pos)/float(int(train_params['pos_samples']/train_params['batch_size'])) 
 			acu_neg = float(acu_neg)/float(int(train_params['neg_samples']/train_params['batch_size']))
-			acu = float(acu)/float(int(train_params['pos_samples']/train_params['batch_size']) + int(train_params['neg_samples']/train_params['batch_size']))
-			f_out.write('acu_pos: ' + str(acu_pos)+', acu_neg: '+str(acu_neg)+', acu:'+str(acu)+'\n')
+			f_out.write('acu_pos: ' + str(acu_pos)+', acu_neg: '+str(acu_neg)+'\n')
