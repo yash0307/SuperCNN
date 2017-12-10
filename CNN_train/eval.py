@@ -61,17 +61,15 @@ if __name__ == '__main__':
         data = get_train_data(train_data, train_labels)
         train_params = initialize_params(train_data, data)
 
-	model = load_model('model_11.h5')
+	model = load_model('model_14.h5')
 	num_images = train_data.shape[1]
 	avg_acu = 0
+	out_mat = np.zeros((num_images, train_params['max_size']))
 	for i in range(0, num_images):
 		given_image_sp = train_data[0][i]
-		print(given_image_sp.shape)
 		given_image_lb = train_labels[i][0]
-		print(given_image_lb.shape)
 		num_sp = given_image_lb.shape[1]
 		acu = 0
-		print(num_sp)
 		for j in range(0, num_sp):
 			given_label = given_image_lb[0][j]
 			X = np.zeros((1,train_params['max_size'], 3))
@@ -81,6 +79,7 @@ if __name__ == '__main__':
 				X[0,:sam_len, :] = given_rep
 				pred = model.predict(X)
 				pred = np.where(pred == pred.max())[1][0]
+				out_mat[i][j] = pred
 				if pred == given_label:
 					acu += 1
 			elif given_label == 1:
@@ -89,6 +88,7 @@ if __name__ == '__main__':
 				X[0,:sam_len, :] = given_rep
 				pred = model.predict(X)
 				pred = np.where(pred == pred.max())[1][0]
+				out_mat[i][j] = pred
 				if pred == given_label:
 					acu += 1
 			else:
@@ -99,3 +99,4 @@ if __name__ == '__main__':
 		avg_acu = avg_acu + acu
 	avg_acu = float(avg_acu)/float(num_images)
 	print('Over Acu: ' + str(avg_acu))
+	sio.savemat('./out.mat', mdict={'out_mat':out_mat})
