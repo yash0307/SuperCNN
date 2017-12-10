@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6500 64-bit) (preloaded format=pdflatex 2017.12.7)  8 DEC 2017 07:30
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6500 64-bit) (preloaded format=pdflatex 2017.12.7)  9 DEC 2017 18:42
 entering extended mode
 **./writeup.tex
 (writeup.tex
@@ -555,10 +555,10 @@ Underfull \hbox (badness 10000) in paragraph at lines 96--97
 
  []
 
-<dataset_img.PNG, id=1, 319.69438pt x 170.13562pt>
-File: dataset_img.PNG Graphic file (type png)
-<use dataset_img.PNG>
-Package pdftex.def Info: dataset_img.PNG  used on input line 107. on input line
+<dataset_img.png, id=1, 319.69438pt x 170.13562pt>
+File: dataset_img.png Graphic file (type png)
+<use dataset_img.png>
+Package pdftex.def Info: dataset_img.png  used on input line 107. on input line
  107.
 Package pdftex.def Info: Requested size: 252.0pt x 134.1123pt on input line 107
 .
@@ -633,13 +633,19 @@ Underfull \hbox (badness 10000) in paragraph at lines 138--139
 
  []
 
-[2 <./dataset_img.PNG>]
+[2 <./dataset_img.png>]
+<scattered_background.png, id=24, 257.96375pt x 137.01187pt>
+File: scattered_background.png Graphic file (type png)
+<use scattered_background.png>
+Package pdftex.def Info: scattered_background.png  used on input line 157. on i
+nput line 157.
+Package pdftex.def Info: Requested size: 252.0pt x 133.8484pt on input line 157
+.
 
-LaTeX Warning: Reference `fig3' on page 3 undefined on input line 157.
 
-[3
+LaTeX Warning: Reference `fig4' on page 3 undefined on input line 184.
 
-] (writeup.aux)
+[3 <./scattered_background.png>] (writeup.aux)
 
 LaTeX Warning: There were undefined references.
 
@@ -649,13 +655,13 @@ LaTeX Warning: There were undefined references.
 ### simple group (level 1) entered at line 96 ({)
 ### bottom level 
 Here is how much of TeX's memory you used:
- 4253 strings out of 493312
- 63743 string characters out of 3138899
- 128699 words of memory out of 3000000
- 7700 multiletter control sequences out of 15000+200000
+ 4252 strings out of 493312
+ 63793 string characters out of 3138899
+ 129707 words of memory out of 3000000
+ 7705 multiletter control sequences out of 15000+200000
  41563 words of font info for 89 fonts, out of 3000000 for 9000
  1144 hyphenation exceptions out of 8191
- 41i,16n,26p,1428b,246s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 41i,16n,26p,1428b,251s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Program Files/MiKTeX 2.9/fonts/enc/dvips/base/8r.enc}<C:/Pr
 ogram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Program Fi
 les/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Program Files/MiKT
@@ -665,13 +671,13 @@ nts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1
 msfonts/cm/cmr5.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm
 /cmr7.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pf
 b><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy6.pfb><C:/Pro
-gram Files/MiKTeX 2.9/fonts/type1/urw/times/utmb8a.pfb><C:/Program Files/MiKTeX
- 2.9/fonts/type1/urw/times/utmbi8a.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1
-/urw/times/utmr8a.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/times/utmri8
-a.pfb>
-Output written on writeup.pdf (3 pages, 434431 bytes).
+gram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Program File
+s/MiKTeX 2.9/fonts/type1/urw/times/utmb8a.pfb><C:/Program Files/MiKTeX 2.9/font
+s/type1/urw/times/utmbi8a.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/time
+s/utmr8a.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/times/utmri8a.pfb>
+Output written on writeup.pdf (3 pages, 635614 bytes).
 PDF statistics:
- 68 PDF objects out of 1000 (max. 8388607)
+ 74 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 6 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 11 words of extra memory for PDF output out of 10000 (max. 10000000)
 
