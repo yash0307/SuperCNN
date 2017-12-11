@@ -97,13 +97,13 @@ def load_data(data, train_params):
 		Y_temp[i][1] = float(1)
 		sam = data[1][idx[i]]
 		sam_len = sam.shape[0]
-		X_temp[i, :sam_len, :] = sam
+		X_temp[i, :sam_len, :] = np.true_divide(sam, sam.max())
 	idx = random.sample(range(0, train_params['neg_samples']), int(train_params['batch_size']-(train_params['batch_size']*data_frac)+2))
 	for i in range(int(train_params['batch_size']*data_frac), train_params['batch_size']):
 		Y_temp[i][0] = float(1)
 		sam = data[0][idx[i-int(train_params['batch_size']*data_frac)]]
 		sam_len = sam.shape[0]
-		X_temp[i, :sam_len, :] = sam
+		X_temp[i, :sam_len, :] = np.true_divide(sam, sam.max())
         X = np.zeros((train_params['batch_size'], train_params['max_size'], 3))
         Y = np.zeros((train_params['batch_size'], 2))
 	perm_idx = np.random.permutation(train_params['batch_size'])
@@ -160,9 +160,10 @@ if __name__ == '__main__':
 				for j in range(0, train_params['batch_size']):
 					sam = data[1][i*train_params['batch_size'] + j]
 					sam_len = sam.shape[0]
-					X[j, :sam_len, :] = sam
+					X[j, :sam_len, :] = np.true_divide(sam, sam.max())
 					Y[j][1] = float(1)
-				pred = model.evaluate(X,Y, batch_size=train_params['batch_size'])
+				pred = model.evaluate(X,Y, 
+						batch_size=train_params['batch_size'])
 				print(pred)
 				acu_pos = acu_pos + pred[1]
 				acu = acu + pred[1]
@@ -172,9 +173,10 @@ if __name__ == '__main__':
 				for j in range(0, train_params['batch_size']):
 					sam = data[0][i*train_params['batch_size'] + j]
 					sam_len = sam.shape[0]
-					X[j, :sam_len, :] = sam
+					X[j, :sam_len, :] = np.true_divide(sam, sam.max())
 					Y[j][0] = float(1)
-				pred = model.evaluate(X,Y, batch_size=train_params['batch_size'])
+				pred = model.evaluate(X,Y, 
+						batch_size=train_params['batch_size'])
 				print(pred)
 				acu_neg = acu_neg + pred[1]
 				acu = acu + pred[1]

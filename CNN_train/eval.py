@@ -76,21 +76,27 @@ if __name__ == '__main__':
 			if given_label == 0:
 				given_rep = np.asarray(given_image_sp[j][:], dtype='float')
 				sam_len = given_rep.shape[0]
-				X[0,:sam_len, :] = given_rep
+				X[0,:sam_len, :] = np.true_divide(given_rep, given_rep.max())
 				pred = model.predict(X)
-				pred = np.where(pred == pred.max())[1][0]
-				out_mat[i][j] = pred
-				if pred == given_label:
+				pred_idx = np.where(pred == pred.max())[1][0]
+				if (pred.max() < 0.60) and (pred_idx == 1):
+					pred_idx = 0
+				out_mat[i][j] = pred_idx
+				if pred_idx == given_label:
 					acu += 1
+				else:
+					pass
 			elif given_label == 1:
 				given_rep = np.asarray(given_image_sp[j][:], dtype='float')
 				sam_len = given_rep.shape[0]
-				X[0,:sam_len, :] = given_rep
+				X[0,:sam_len, :] = np.true_divide(given_rep, given_rep.max())
 				pred = model.predict(X)
-				pred = np.where(pred == pred.max())[1][0]
-				out_mat[i][j] = pred
-				if pred == given_label:
+				pred_idx = np.where(pred == pred.max())[1][0]
+				out_mat[i][j] = pred_idx
+				if pred_idx == given_label:
 					acu += 1
+				else:
+					pass
 			else:
 				print('SOMETHING IS WRONG !')
 				sys.exit(1)
